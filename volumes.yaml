@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: PersistentVolume            
+metadata:
+  name: postgres-pv
+spec:
+  storageClassName: default  
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:                       
+    path: "/mnt/data"
+  #persistentVolumeReclaimPolicy: Retain 
+
+---
+apiVersion: v1
+kind: PersistentVolume            
+metadata:
+  name: sonar-data-pv
+spec:
+  storageClassName: default  
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:                       
+    path: "/mnt/data"
+  #persistentVolumeReclaimPolicy: Retain 
+
+---
+apiVersion: v1
+kind: PersistentVolume            
+metadata:
+  name: sonar-extersion-pv
+spec:
+  storageClassName: default  
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:                       
+    path: "/mnt/data"
+  #persistentVolumeReclaimPolicy: Retain 
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: devops
+  name: postgres-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: default
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: devops
+  name: sonar-data-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: default
+  resources:
+    requests:
+      storage: 5Gi
+
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: devops
+  name: sonar-extersion-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: default
+  resources:
+    requests:
+      storage: 5Gi

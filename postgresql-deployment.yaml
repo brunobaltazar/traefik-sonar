@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secrets
+  namespace: devops
+type: Opaque
+data:
+  username: cG9zdGdyZXNhZG1pbg==
+  password: cG9zdGdyZXNhZG1pbg==
+  # exemplo echo -n "postgresadmin" | base64
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: devops
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:10.4
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgresdb
+          imagePullPolicy: "IfNotPresent"
+          env:
+          - name: PGDATA
+            value: /var/lib/postgresql/data/pgdata
+          - name: POSTGRES_DB                   
+            value: sonarqube
+          - name: PGTZ                   
+            value: America/Sao_Paulo   
+          - name: TZ                   
+            value: America/Sao_Paulo   
+          - name: "POSTGRES_USER"
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secrets
+                key: username
+          - name: "POSTGRES_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secrets
+                key: password
+          ports:
+            - containerPort: 5432
+      volumes:
+        - name: postgresdb
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: postgres
+  namespace: devops
+  labels: 
+    app: postgres
+  annotations:
+    postgres: database app sonarqube
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+  type: ClusterIP
