@@ -33,15 +33,21 @@ spec:
   selector:
     app: one
 
----    
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: traefik-ingress-one
   namespace: default
   annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
     kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
+  tls:
+  - hosts:
+    - one.devopslabs.live
+    secretName: one.devopslabs.live-tls
   rules:
   - host: one.devopslabs.live
     http:
@@ -52,4 +58,4 @@ spec:
             port:
               number: 80
         path: /
-        pathType: Prefix
+        pathType: Prefix   

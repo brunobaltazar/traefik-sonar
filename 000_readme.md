@@ -6,8 +6,18 @@ kubectl apply -f sonarqube-deployment.yaml
 kubectl get all -n devops
 kubectl delete -f namespace.yaml  -f volumes.yaml
 
+kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 9000:9000
+
+kubectl get service,pod -n devops
+kubectl port-forward pod/sonarqube-f745bdbfc-sl997 port localhost:9000
+kubectl port-forward sonarqube-f745bdbfc-sl997 9001:80
+kubectl port-forward <pod-name> <locahost-port>:<pod-port>
+
+
 Testado e validado
 Todos os recursos do Helm são suportados. Por exemplo, instalando o gráfico em um namespace dedicado:
+
+
 kubectl create ns traefik-devops
 helm repo add traefik https://helm.traefik.io/traefik
 helm repo update
@@ -27,7 +37,32 @@ kubectl apply -f 003-app.yaml
 
 
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.3.1/cert-manager.yaml
-kubectl delete -f namespace.yaml  -f volumes.yaml  -f postgresql-deployment.yaml -f sonarqube-deployment.yaml
+Observação: o segredo e os certificados devem estar no mesmo namespace que o ingresso.
+
+https://github.com/jetstack/cert-manager/releases/download/v1.3.1/cert-manager.yaml
+kubectl apply -f letsencrypt-issuer.yaml
+kubectl apply -f letsencrypt-cert.yaml
+kubectl get certificates  = resultado deve ser true 
+kubectl describe certificates nginxapp.devopslabs.live  = resultado deve ser algo The certificate has been successfully issued
+kubectl get secrets nginxapp.devopslabs.live.tls
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+kubectl delete -f namespace.yaml  -f volumes.yaml
+
 
 
 

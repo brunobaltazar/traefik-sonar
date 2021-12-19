@@ -18,7 +18,6 @@ spec:
       containers:
       - name: nginx
         image: "nginx"
-
 ---
 apiVersion: v1
 kind: Service
@@ -32,7 +31,6 @@ spec:
   - name: http
     targetPort: 80
     port: 80
-
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -40,8 +38,14 @@ metadata:
   name: traefik-ingress-nginx
   namespace: default
   annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
     kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
+  tls:
+  - hosts:
+    - nginxapp.devopslabs.live
+    secretName: nginxapp.devopslabs.live.tls
   rules:
   - host: nginxapp.devopslabs.live
     http:
@@ -53,4 +57,3 @@ spec:
               number: 80
         path: /
         pathType: Prefix
-
