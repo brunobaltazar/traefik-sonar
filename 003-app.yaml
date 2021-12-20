@@ -38,7 +38,7 @@ metadata:
   name: traefik-ingress-nginx
   namespace: default
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
+    cert-manager.io/cluster-issuer: letsencrypt-staging-devops
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.tls: "true"
 spec:

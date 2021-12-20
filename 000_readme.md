@@ -6,6 +6,7 @@ kubectl apply -f sonarqube-deployment.yaml
 kubectl get all -n devops
 kubectl delete -f namespace.yaml  -f volumes.yaml
 
+
 kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 9000:9000
 
 kubectl get service,pod -n devops
@@ -35,13 +36,11 @@ kubectl apply -f 002-app.yaml
 kubectl apply -f 003-app.yaml
 
 
-
-kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.3.1/cert-manager.yaml
 Observação: o segredo e os certificados devem estar no mesmo namespace que o ingresso.
+kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.3.1/cert-manager.yaml 
 
 https://github.com/jetstack/cert-manager/releases/download/v1.3.1/cert-manager.yaml
 kubectl apply -f letsencrypt-issuer.yaml
-kubectl apply -f letsencrypt-cert.yaml
 kubectl get certificates  = resultado deve ser true 
 kubectl describe certificates nginxapp.devopslabs.live  = resultado deve ser algo The certificate has been successfully issued
 kubectl get secrets nginxapp.devopslabs.live.tls

@@ -92,7 +92,6 @@ metadata:
     name: sonarqube
   annotations: 
     sonarqube: sonarqube check vulnerability 
-    #service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 spec:
   #type: LoadBalancer
   #loadBalancerIP: 172.21.0.200
@@ -111,7 +110,7 @@ metadata:
   name: traefik-ingress-sonar
   namespace: default
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
+    cert-manager.io/cluster-issuer: letsencrypt-staging-devops
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.tls: "true"
     traefik.ingress.kubernetes.io/proxy-body-size: "20m"
