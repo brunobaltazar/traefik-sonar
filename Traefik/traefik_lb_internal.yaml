@@ -1,0 +1,131 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: devops
+  name: traefik-ingress-controller
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - endpoints
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  - apiGroups:
+      - traefik.containo.us
+    resources:
+      - middlewares
+      - ingressroutes
+      - traefikservices
+      - ingressroutetcps
+      - ingressrouteudps
+      - tlsoptions
+      - tlsstores
+      - serverstransports
+    verbs:
+      - get
+      - list
+      - watch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: devops
+  name: traefik-ingress-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-ingress-controller
+subjects:
+  - kind: ServiceAccount
+    name: traefik-ingress-controller
+    namespace: devops
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: devops
+  name: traefik
+  namespace: devops
+  labels:
+    app: traefik
+  annotations:
+    #service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  ports:
+    - protocol: TCP
+      name: http
+      port: 80
+    - protocol: TCP
+      name: admin
+      port: 8080
+    - protocol: TCP
+      name: https
+      port: 443
+
+  type: LoadBalancer
+  #loadBalancerIP: 172.21.0.200 
+  selector:
+    app: traefik
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: devops
+  name: traefik-ingress-controller
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  namespace: devops
+  name: traefik
+  labels:
+    app: traefik
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      containers:
+        - name: traefik
+          image: traefik:v2.5
+          args:
+            - --api.insecure
+            - --accesslog
+            - --entrypoints.https.Address=:443
+            - --entrypoints.http.Address=:80
+            - --providers.kubernetesIngress.ingressClass=traefik
+      
+
+          ports:
+            - name: web
+              containerPort: 80
+            - name: websecure
+              containerPort: 443
+            - name: admin
+              containerPort: 8080
