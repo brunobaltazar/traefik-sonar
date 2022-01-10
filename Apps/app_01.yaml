@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: one 
+  namespace: one
 spec:
   replicas: 1
   selector:
@@ -25,7 +26,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: one
-  namespace: default
+  namespace: one
 spec:
   type: ClusterIP
   ports:
@@ -38,11 +39,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: traefik-ingress-one
-  namespace: default
+  namespace: one
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-staging-devops
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: devops-redirect-https@kubernetescrd
 spec:
   tls:
   - hosts:

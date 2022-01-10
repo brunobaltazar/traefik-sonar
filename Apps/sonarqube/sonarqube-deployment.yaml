@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: sonarqube
   namespace: default
-  #namespace: devops
 spec:
   selector:
     matchLabels:
@@ -52,11 +51,8 @@ spec:
           - mountPath: /opt/sonarqube/extensions/
             name: sonar-extensions
           env:
-
-          #- name: "SONAR_WEB_CONTEXT"
-          #  value: "sonar"
-          #- name: "SONAR_WEB_HOST"
-          #  value: "0.0.0.0"
+          - name: "SONAR_WEB_CONTEXT"
+            value: "sonar"
           - name: "SONARQUBE_JDBC_URL"
             value: "jdbc:postgresql://postgres:5432/sonarqube"
           - name: "SONARQUBE_JDBC_USERNAME"

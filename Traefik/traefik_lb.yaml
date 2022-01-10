@@ -1,3 +1,42 @@
+# As a Kubernetes Traefik IngressRoute
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: middlewares.traefik.containo.us
+  namespace: devops
+spec:
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: Middleware
+    plural: middlewares
+    singular: middleware
+  scope: Namespaced
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: stripprefix
+  namespace: devops
+spec:
+  stripPrefix:
+    prefixes:
+      - /stripit
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute
+  namespace: devops
+spec:
+# more fields...
+  routes:
+    # more fields...
+    middlewares:
+      - name: stripprefix
+---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -120,7 +159,7 @@ spec:
             - --entrypoints.https.Address=:443
             - --entrypoints.http.Address=:80
             - --providers.kubernetesIngress.ingressClass=traefik
-      
+            - --providers.kubernetescrd
 
           ports:
             - name: web
