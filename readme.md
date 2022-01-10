@@ -100,8 +100,6 @@ kubectl get secrets nginxapp.devopslabs.live.tls -n one
 kubectl apply -f postgresql-deployment.yaml 
 kubectl apply -f sonarqube-deployment.yaml
 kubectl get all -n devops
-kubectl delete -f namespace.yaml  -f volumes.yaml
-kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 9000:9000
 kubectl get service,pod -n devops
 ```
 
