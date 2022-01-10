@@ -80,11 +80,19 @@ NAME                            READY   SECRET                         AGE
 two.devopslabs.live.tls         True    two.devopslabs.live.tls        28m
 ```
 
+```shell
+kubectl get certificates -n one
+```
 
-kubectl get certificates  = resultado deve ser true 
-kubectl describe certificates nginxapp.devopslabs.live  = resultado deve ser algo The certificate has been successfully issued
-kubectl get secrets nginxapp.devopslabs.live.tls
+```shell
+kubectl describe certificates nginxapp.devopslabs.live -n one 
+```
 
+> resultado deve ser algo The certificate has been successfully issued
+
+```shell
+kubectl get secrets nginxapp.devopslabs.live.tls -n one
+```
 
 
 

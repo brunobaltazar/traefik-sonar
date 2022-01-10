@@ -13,29 +13,30 @@ spec:
     singular: middleware
   scope: Namespaced
 
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: stripprefix
-  namespace: devops
-spec:
-  stripPrefix:
-    prefixes:
-      - /stripit
 
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: ingressroute
-  namespace: devops
-spec:
-# more fields...
-  routes:
-    # more fields...
-    middlewares:
-      - name: stripprefix
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: stripprefix
+#   namespace: devops
+# spec:
+#   stripPrefix:
+#     prefixes:
+#       - /stripit
+
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: ingressroute
+#   namespace: devops
+# spec:
+# # more fields...
+#   routes:
+#     # more fields...
+#     middlewares:
+#       - name: stripprefix
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
